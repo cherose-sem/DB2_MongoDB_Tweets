@@ -9,10 +9,17 @@ def get_all():
         print(tweet)
 
 def get_total_user_amount():
-    print (len(db.tweets.distinct('user')))
+    return (len(db.tweets.distinct('user'))) #gets the length of the distinct users
 
 def get_most_linked():
-    print('?')
+    pipeline = [
+        {'$match':{'text':{'$regex':"@\w+"}}}, # check a match to '@..' from the property 'text'
+        {'$addFields': {"mentions":1}}, # creating a field for no. of mentions
+        {'$group':{"_id":"$user", "mentions":{'$sum':1}}}, # increment the no. of mentions by each unique users mentioned
+        {'$sort':{"mentions":-1}}, #sort by mentions
+        {'$limit':10}] # get top 10
+    tweets = db.tweets.aggregate(pipeline)
+    return(list(tweets))
 
 def get_most_mentioned():
     pipeline = [
@@ -24,59 +31,63 @@ def get_most_mentioned():
         {'$limit':5} #only top 5
     ]
     tweets = db.tweets.aggregate(pipeline)
-    print (list(tweets))
+    return (list(tweets))
 
 def get_most_active():
     pipeline = [
-        {'$group': {'_id': '$user', 'total': {'$sum':1}}},
-        {'$sort':{'total':-1}},
-        {'$limit':10}
+        {'$group': {'_id': '$user', 'total': {'$sum':1}}}, # group by unque users and increment based on number of tweets
+        {'$sort':{'total':-1}}, # sort
+        {'$limit':10} # top 10
     ]
     tweets = db.tweets.aggregate(pipeline)
-    print (list(tweets))
+    return (list(tweets))
 
-# sad, sad face, huhu
 def get_most_grumpy():
     pipeline = [
-        {'$match': {'text': {'$regex': "worst$"}}},
-        {'$project': {'_id': 0, 'user': 1}},
-        {'$limit': 5}
+        {'$match': {'text': {'$regex': "worst|wtf|damn|angry|pissed|mad"}}}, # find the match on the text property
+        {'$group':{'_id':"$user", 'total_negative_tweets': {'$sum': 1}}}, # sum up the total negative tweets based on users
+        {'$sort':{ 'emotion': 1, 'total_negative_tweets':-1}}, # sort
+        {'$limit': 5} # top 5
     ]
     tweets = db.tweets.aggregate(pipeline)
-    print (list(tweets))
+    return (list(tweets))
 
-# love, smileys, haha
 def get_most_happy():
     pipeline = [
-        {'$match': {'text': {'$regex': "love$"}}},
-        {'$project': {'_id': 0, 'user': 1}},
-        {'$limit': 5}
+        {'$match': {'text': {'$regex': "love|nice|good|great|amazing|happy"}}}, # find the match on the text property
+        {'$group':{'_id':"$user", 'total_positive_tweets': {'$sum': 1}}}, # sum up the total positive tweets based on users
+        {'$sort':{ 'emotion': -1, 'total_positive_tweets':-1}}, #sort
+        {'$limit': 5} # top 5
     ]
     tweets = db.tweets.aggregate(pipeline)
-    print (list(tweets))
+    return (list(tweets))
+
+def print_list(list):
+    for el in list:
+        print(el)
 
 # MAIN
 # get_all()
 
-# print('How many Twitter users are in the database?')
-# get_total_user_amount()
-#
-# print('\n-------------------------------------------------------------------------')
-# print('Which Twitter users link the most to other Twitter users? (Provide the top ten.)')
-# get_most_linked()
-#
-# print('\n-------------------------------------------------------------------------')
-# print('Who are the most mentioned Twitter users? (Provide the top five.)')
-# get_most_mentioned()
-#
+print('How many Twitter users are in the database?')
+print(get_total_user_amount() , 'Twitter users')
+
+print('\n-------------------------------------------------------------------------')
+print('Which Twitter users link the most to other Twitter users? (Provide the top ten.)')
+print_list(get_most_linked())
+
+print('\n-------------------------------------------------------------------------')
+print('Who are the most mentioned Twitter users? (Provide the top five.)')
+print_list(get_most_mentioned())
+
 print('\n-------------------------------------------------------------------------')
 print('Who are the most active Twitter users (top ten)?')
-get_most_active()
-#
-# print('\n-------------------------------------------------------------------------')
-# print('Who are the five most grumpy (most negative tweets) and the most happy (most positive tweets)? (Provide five users for each group)')
-# print('MOST GRUMPY: ')
-# get_most_grumpy()
-# print('\n')
-# print('MOST HAPPY: ')
-# get_most_happy()
+print_list(get_most_active())
+
+print('\n-------------------------------------------------------------------------')
+print('Who are the five most grumpy (most negative tweets) and the most happy (most positive tweets)? (Provide five users for each group)')
+print('MOST GRUMPY: ')
+print_list(get_most_grumpy())
+print('\n')
+print('MOST HAPPY: ')
+print_list(get_most_happy())
