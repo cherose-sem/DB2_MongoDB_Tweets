@@ -20,10 +20,17 @@ _You present your system's answers to the questions above in a Markdown file on 
 
 ### Setup
 This program was made in Python. 
-1. See instructions here in getting the data and stored in MongoDB: https://github.com/datsoftlyngby/soft2018spring-databases-teaching-material/blob/master/lecture_notes/02-Intro_to_MongoDB.ipynb
+1. See instructions here in getting the data and stored in MongoDB: https://github.com/datsoftlyngby/soft2018spring-databases-teaching-material/blob/master/lecture_notes/02-Intro_to_MongoDB.ipynb (_Make sure your database is up and running_)
 2. `git clone https://github.com/cph-cs241/DB2_MongoDB_Tweets.git`
 3. `python -m pip install pymongo`
-4. To run: `python db_tweets.py`
+4. To run: `python db_tweets.py` _It may take a while :-)_
 
 ### Solution
+![image](https://user-images.githubusercontent.com/16150075/36120297-05ccfb40-1043-11e8-8e90-40a90dfbf298.png)
 
+The following functions corresponds to the questions above:
+1. get_total_user_amount
+2. get_most_linked
+3. get_most_mentioned
+4. get_most_active
+5. get_most_grumpy & get_most_happy
