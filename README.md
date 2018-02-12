@@ -19,7 +19,11 @@ _Your application can be written in the language of your choice. It must have a 
 _You present your system's answers to the questions above in a Markdown file on your Github account. That is, you hand in this assignment via Github, with one hand-in per group. Push your solution, source, code, and presentation of the results to a Github repository per group and push a link to your solution in the hand-in area._
 
 ### Setup
-
-
+This program was made in Python. 
+1. See instructions here in getting the data and stored in MongoDB: https://github.com/datsoftlyngby/soft2018spring-databases-teaching-material/blob/master/lecture_notes/02-Intro_to_MongoDB.ipynb
+2. `git clone https://github.com/cph-cs241/DB2_MongoDB_Tweets.git`
+3. `python -m pip install pymongo`
+4. To run: `python db_tweets.py`
 
 ### Solution
+
