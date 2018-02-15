@@ -45,7 +45,7 @@ def get_most_active():
 def get_most_grumpy():
     pipeline = [
         {'$match': {'text': {'$regex': "worst|wtf|damn|angry|pissed|mad"}}}, # find the match on the text property
-        {'$group':{'_id':"$user", 'total_negative_tweets': {'$sum': 1}}}, # sum up the total negative tweets based on users
+        {'$group':{'_id':"$user", 'emotion': {'$avg': "$polarity"}, 'total_negative_tweets': {'$sum': 1}}}, # sum up the total negative tweets based on users
         {'$sort':{ 'emotion': 1, 'total_negative_tweets':-1}}, # sort
         {'$limit': 5} # top 5
     ]
@@ -55,7 +55,7 @@ def get_most_grumpy():
 def get_most_happy():
     pipeline = [
         {'$match': {'text': {'$regex': "love|nice|good|great|amazing|happy"}}}, # find the match on the text property
-        {'$group':{'_id':"$user", 'total_positive_tweets': {'$sum': 1}}}, # sum up the total positive tweets based on users
+        {'$group':{'_id':"$user", 'emotion': {'$avg': "$polarity"}, 'total_positive_tweets': {'$sum': 1}}}, # sum up the total positive tweets based on users
         {'$sort':{ 'emotion': -1, 'total_positive_tweets':-1}}, #sort
         {'$limit': 5} # top 5
     ]
